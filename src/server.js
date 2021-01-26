@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const passport = require('passport')
+const cors = require('cors')
 
 const authRoute = require('./routes/auth.route')
 const homeRoute = require('./routes/home.route')
@@ -26,6 +27,7 @@ app.set('port', process.env.PORT)
 /*
 	Middlewares
 */
+app.use(cors())
 app.use(morgan('dev'))
 // para que podamos entender el formato json
 app.use(express.json())
