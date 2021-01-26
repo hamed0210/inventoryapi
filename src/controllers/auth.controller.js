@@ -49,4 +49,4 @@ const createToken = (user) => {
 	})
 }
 
-module.exports = { signUp, signIn }
+module.exports = { signIn }

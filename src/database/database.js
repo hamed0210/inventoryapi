@@ -17,10 +17,10 @@ const sequelize = new Sequelize(db.name, db.username, db.password, {
 sequelize
 	.authenticate()
 	.then(() => {
-		console.log('Conectado')
+		console.log('database connected successfully')
 	})
 	.catch((err) => {
-		console.log('No se conecto')
+		console.log('could not connect to database')
 	})
 
 module.exports = sequelize
