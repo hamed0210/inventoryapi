@@ -11,11 +11,11 @@ const Clientes = async (req = request, res = response) => {
 				message: 'No se encontró ningún cliente registrado',
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -31,11 +31,11 @@ const Cliente = async (req = request, res = response) => {
 				message: `No se encontró ningún cliente registrado con el id ${id}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -65,12 +65,12 @@ const ClienteCreate = async (req = request, res = response) => {
 			ciudad,
 		})
 
-		return res.json({
+		return res.status(201).json({
 			message: 'Nuevo cliente creado correctamente',
 			data: newCliente,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -96,12 +96,12 @@ const ClienteUpdate = async (req = request, res = response) => {
 			})
 		}
 
-		return res.json({
+		return res.status(200).json({
 			message: 'cliente actualizado correctamente',
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -121,11 +121,11 @@ const ClienteDelete = async (req = request, res = response) => {
 				message: `Error al intentar eliminar cliente con id ${id}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			message: 'cliente eliminado correctamente',
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const { jwtSecret } = require('../config')
 
 const userModel = require('../models/user.model')
+const personalModel = require('../models/personal.model')
 
 const signIn = async (req = request, res = response) => {
 	const { email, pass } = req.body
@@ -18,6 +19,10 @@ const signIn = async (req = request, res = response) => {
 			where: {
 				email: email,
 			},
+			include: {
+				model: personalModel,
+				attributes: { exclude: 'id_usu' },
+			},
 		})
 
 		if (!result) {
@@ -29,7 +34,8 @@ const signIn = async (req = request, res = response) => {
 		const isMatch = await userModel.comparePassword(req.body)
 
 		if (isMatch) {
-			return res.status(200).json({ token: createToken(result) })
+			const token = createToken(result)
+			return res.status(200).json({ token: token })
 		}
 
 		return res.status(400).json({

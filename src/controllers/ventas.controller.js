@@ -11,11 +11,11 @@ const Ventas = async (req = request, res = response) => {
 				message: 'No se encuentró ninguna venta registrada',
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -31,11 +31,11 @@ const Venta = async (req = request, res = response) => {
 				message: `No se encuentró ninguna venta registrada con el código ${codigo}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -69,12 +69,12 @@ const VentaCreate = async (req = request, res = response) => {
 			t,
 		})
 
-		return res.json({
+		return res.status(201).json({
 			message: 'Nueva venta creada correctamente',
 			data: newVenta,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -100,12 +100,12 @@ const VentaUpdate = async (req = request, res = response) => {
 			})
 		}
 
-		return res.json({
+		return res.status(200).json({
 			message: 'venta actualizada correctamente',
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -125,11 +125,11 @@ const VentaDelete = async (req = request, res = response) => {
 				message: `Error al intentar eliminar venta con código ${codigo}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			message: 'venta eliminada correctamente',
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}

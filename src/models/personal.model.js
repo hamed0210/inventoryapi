@@ -26,7 +26,7 @@ const Personal = sequelize.define(
 			type: Sequelize.BIGINT,
 		},
 		id_usu: {
-			type: Sequelize.INTEGER.UNSIGNED,
+			type: Sequelize.STRING,
 		},
 	},
 	{

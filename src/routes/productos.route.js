@@ -41,4 +41,8 @@ router.delete(
 	ProductoDelete
 )
 
+router.post('/productosimg', (req, res) => {
+	console.log(req.body)
+})
+
 module.exports = router

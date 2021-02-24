@@ -27,11 +27,14 @@ const Productos = db.define(
 		precio_venta: {
 			type: Sequelize.INTEGER,
 		},
-		imagen: {
-			type: Sequelize.STRING,
-		},
+		// imagen: {
+		// 	type: Sequelize.STRING,
+		// },
 		creado_por: {
 			type: Sequelize.INTEGER.UNSIGNED,
+		},
+		fecha_creacion: {
+			type: Sequelize.DATE,
 		},
 	},
 	{

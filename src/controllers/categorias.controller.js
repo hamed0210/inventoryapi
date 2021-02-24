@@ -1,4 +1,6 @@
 const { request, response } = require('express')
+// const uuid = require('uuid')
+const shortid = require('shortid')
 
 const categoriasModel = require('../models/categorias.model')
 
@@ -11,11 +13,11 @@ const Categorias = async (req = request, res = response) => {
 				message: 'No se encuentra ninguna categoría registrada',
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -31,25 +33,29 @@ const Categoria = async (req = request, res = response) => {
 				message: `No se encuentra ninguna categoría registrada con el código ${codigo}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
 }
 const CategoriaCreate = async (req = request, res = response) => {
-	const { codigo, nombre } = req.body
+	const { nombre } = req.body
 
-	if (!codigo || !nombre)
+	if (!nombre)
 		return res.status(400).json({
 			message: 'Por favor ingresar datos requeridos',
 		})
 
 	try {
-		const result = await categoriasModel.findByPk(codigo)
+		const result = await categoriasModel.findOne({
+			where: {
+				nombre: nombre,
+			},
+		})
 
 		if (result)
 			return res.status(400).json({
@@ -57,16 +63,17 @@ const CategoriaCreate = async (req = request, res = response) => {
 			})
 
 		const newCategoria = await categoriasModel.create({
-			codigo,
+			// codigo: uuid.v4(),
+			codigo: shortid.generate(),
 			nombre,
 		})
 
-		return res.json({
+		return res.status(201).json({
 			message: 'Nueva categoría creada correctamente',
-			data: [newCategoria],
+			data: newCategoria,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -88,12 +95,12 @@ const CategoriaUpdate = async (req = request, res = response) => {
 			})
 		}
 
-		return res.json({
+		return res.status(200).json({
 			message: 'Categoría actualizada correctamente',
-			data: [result],
+			data: result,
 		})
 	} catch (error) {
-		return res.json({
+		return res.status(400).json({
 			message: 'Ocurrió un error al realizar la operación',
 		})
 	}
@@ -102,23 +109,26 @@ const CategoriaDelete = async (req = request, res = response) => {
 	const { codigo } = req.params
 
 	try {
-		const result = categoriasModel.destroy({
+		const result = await categoriasModel.destroy({
 			where: {
 				codigo: codigo,
 			},
 		})
+
+		console.log(result)
 
 		if (result == 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar categoría con código ${codigo}`,
 			})
 
-		return res.json({
+		return res.status(200).json({
 			message: 'Categoría eliminada correctamente',
 		})
 	} catch (error) {
-		return res.json({
-			message: 'Ocurrió un error al realizar la operación',
+		return res.status(400).json({
+			message:
+				'Ocurrió un error al realizar la operación, es posible que el elemento este siendo usado',
 		})
 	}
 }

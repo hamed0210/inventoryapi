@@ -8,17 +8,17 @@ const User = sequelize.define(
 	'usuario',
 	{
 		id: {
-			type: Sequelize.UUIDV4,
+			type: Sequelize.STRING,
 			primaryKey: true,
 		},
 		email: {
 			type: Sequelize.STRING,
 		},
 		pass: {
-			type: Sequelize.CHAR(32),
+			type: Sequelize.CHAR(60),
 		},
 		role: {
-			type: Sequelize.ENUM('User', 'Admin'),
+			type: Sequelize.ENUM('Admin', 'User'),
 		},
 	},
 	{
@@ -29,7 +29,7 @@ const User = sequelize.define(
 // User.hasOne(Personal, { foreignKey: { name: 'email_per', allowNull: false } })
 
 User.addHook('beforeValidate', async (user, next) => {
-	if (!user.changed('pass_usu')) return next()
+	if (!user.changed('pass')) return next()
 
 	const salt = await bcrypt.genSalt(10)
 	const hash = await bcrypt.hash(user.pass, salt)

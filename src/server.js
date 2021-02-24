@@ -2,6 +2,8 @@ const express = require('express')
 const morgan = require('morgan')
 const passport = require('passport')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const helmet = require('helmet')
 
 const authRoute = require('./routes/auth.route')
 const homeRoute = require('./routes/home.route')
@@ -31,6 +33,13 @@ app.use(cors())
 app.use(morgan('dev'))
 // para que podamos entender el formato json
 app.use(express.json())
+app.use(express.raw({ type: 'image/*', limit: '4mb' }))
+// Servir archivos estáticos que están en la carpeta public/
+app.use(express.static('public'))
+// Servir las imagenes que vienen de seedear la data
+// app.use('/imagenes', express.static('public/imagenes_seed'));
+app.use(cookieParser())
+app.use(helmet())
 // Trabajar con datos en json
 app.use(express.urlencoded({ extended: false }))
 

@@ -1,5 +1,6 @@
 const { request, response } = require('express')
 const uuid = require('uuid')
+const shortid = require('shortid')
 
 const userModel = require('../models/user.model')
 const personalModel = require('../models/personal.model')
@@ -9,17 +10,17 @@ const Users = async (req = request, res = response) => {
 		const users = await userModel.findAll({
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id' },
+				attributes: { exclude: 'id_usu', include: 'id' },
 			},
-			attributes: { exclude: 'pass' },
+			attributes: { exclude: ['pass', 'id'] },
 		})
+
 		if (users == '') {
 			return res.status(400).json({
 				message: 'No se encuentró ningún usuario registrado',
 			})
 		}
 		return res.status(200).json({
-			message: 'Listado de usuarios',
 			data: users,
 		})
 	} catch (error) {
@@ -39,7 +40,7 @@ const User = async (req = request, res = response) => {
 			},
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id' },
+				attributes: { exclude: 'id_usu' },
 			},
 			attributes: { exclude: 'pass' },
 		})
@@ -81,8 +82,7 @@ const UserCreate = async (req = request, res = response) => {
 		!ciudad ||
 		!cel ||
 		!email ||
-		!pass ||
-		!role
+		!pass
 	) {
 		return res
 			.status(400)
@@ -101,11 +101,11 @@ const UserCreate = async (req = request, res = response) => {
 				.status(400)
 				.json({ message: 'El usuario ya se encuentra registrado' })
 
-		const UUID = uuid.v4()
+		const UUID = shortid.generate()
 
 		const newUser = await userModel.create(
 			{
-				id: UUID,
+				id: shortid.generate(),
 				email,
 				pass,
 				role,
@@ -140,7 +140,7 @@ const UserUpdate = async (req = request, res = response) => {
 	const { pass, role, nombres, apellidos, dir, ciudad, cel, email } = req.body
 
 	try {
-		const result = await userModel.findOne({
+		const result = await personalModel.findOne({
 			where: {
 				id: id,
 			},
@@ -149,21 +149,15 @@ const UserUpdate = async (req = request, res = response) => {
 		if (result) {
 			await result.update(
 				{
-					email,
-					pass,
-					role,
-					persona: [
-						{
-							id: id,
-							nombres,
-							apellidos,
-							dir,
-							ciudad,
-							cel,
-						},
-					],
+					id: id,
+					nombres,
+					apellidos,
+					dir,
+					ciudad,
+					cel,
+					usuario: [{ email, pass, role }],
 				},
-				{ include: 'persona' }
+				{ include: 'usuario' }
 			)
 		} else {
 			return res.status(400).json({

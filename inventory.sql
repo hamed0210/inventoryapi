@@ -35,7 +35,7 @@ CREATE TABLE clientes(
 	ciudad VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE categorias (
+CREATE TABLE categories (
 	codigo VARCHAR(50),
 	nombre VARCHAR(50) NOT NULL,
 	fecha_creacion DATETIME DEFAULT current_timestamp
@@ -43,13 +43,13 @@ CREATE TABLE categorias (
 
 CREATE TABLE productos (
 	codigo VARCHAR(10),
+	-- imagen VARCHAR(50) NOT NULL,
 	nombre VARCHAR(50) NOT NULL,
 	descripcion TEXT,
 	categoria VARCHAR(50) NOT NULL,
 	stock INT(10) NOT NULL,
 	precio_compra INT(50) UNSIGNED NOT NULL,
 	precio_venta INT(50) UNSIGNED NOT NULL,
-	imagen VARCHAR(50) NOT NULL,
 	creado_por INT(10) UNSIGNED NOT NULL,
 	fecha_creacion DATETIME DEFAULT current_timestamp
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -74,12 +74,12 @@ ALTER TABLE personas
 ALTER TABLE clientes 
 	ADD PRIMARY KEY (id);
 
-ALTER TABLE categorias 
+ALTER TABLE categories 
 	ADD PRIMARY KEY (codigo);
 
 ALTER TABLE productos 
 	ADD PRIMARY KEY (codigo),
-	ADD FOREIGN KEY (categoria) REFERENCES categorias(codigo) ON DELETE RESTRICT ON UPDATE CASCADE,
+	ADD FOREIGN KEY (categoria) REFERENCES categories(codigo) ON DELETE RESTRICT ON UPDATE CASCADE,
 	ADD FOREIGN KEY (creado_por) REFERENCES personas(id) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE ventas
@@ -108,7 +108,7 @@ INSERT INTO `personas` (`id`, `nombres`, `apellidos`, `dir`, `ciudad`, `cel`, `i
 -- Volcado de datos para la tabla `categorias`
 --
 
-INSERT INTO `categorias` (`codigo`, `nombre`) VALUES
+INSERT INTO `categories` (`codigo`, `nombre`) VALUES
 ('1', 'Bebidas');
 
 --
@@ -124,5 +124,5 @@ INSERT INTO `clientes` (`id`, `nombre`, `email`, `cel`, `dir`, `ciudad`) VALUES
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`codigo`, `nombre`, `descripcion`, `categoria`, `imagen`, `stock`, `precio_compra`, `precio_venta`, `creado_por`) VALUES
-('101', 'Coca-Cola', 'Zero', '1', '105.png', 50, 1000, 1500, 1046814387);
+INSERT INTO `productos` (`codigo`, `nombre`, `descripcion`, `categoria`, `stock`, `precio_compra`, `precio_venta`, `creado_por`) VALUES
+('101', 'Coca-Cola', 'Zero', '1', 50, 1000, 1500, 1046814387);

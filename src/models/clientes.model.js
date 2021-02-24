@@ -9,7 +9,7 @@ const Clientes = database.define(
 			type: Sequelize.INTEGER.UNSIGNED,
 			primaryKey: true,
 		},
-		nombres: {
+		nombre: {
 			type: Sequelize.STRING,
 		},
 		email: {

@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize')
 const db = require('../database/database')
 
 const Categorias = db.define(
-	'categoria',
+	'category',
 	{
 		codigo: {
 			type: Sequelize.UUIDV4,
