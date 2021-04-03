@@ -2,32 +2,26 @@ const { Sequelize } = require('sequelize')
 
 const db = require('../database/database')
 
-const Ventas = db.define(
-	'ventas',
+const Compras = db.define(
+	'compra',
 	{
 		codigo: {
 			type: Sequelize.STRING,
 			primaryKey: true,
 		},
-		id_cliente: {
+		id_proveedor: {
 			type: Sequelize.INTEGER.UNSIGNED,
 		},
-		id_vendedor: {
+		id_comprador: {
 			type: Sequelize.INTEGER.UNSIGNED,
 		},
-		producto: {
-			type: Sequelize.STRING,
-		},
-		cantidad: {
-			type: Sequelize.INTEGER,
-		},
-		precio_unidad: {
-			type: Sequelize.FLOAT,
+		productos: {
+			type: Sequelize.TEXT,
 		},
 		precio_total: {
 			type: Sequelize.FLOAT,
 		},
-		fecha_venta: {
+		fecha_compra: {
 			type: Sequelize.DATE,
 		},
 	},
@@ -36,4 +30,4 @@ const Ventas = db.define(
 	}
 )
 
-module.exports = Ventas
+module.exports = Compras

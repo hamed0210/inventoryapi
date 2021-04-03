@@ -1,5 +1,4 @@
 const { request, response } = require('express')
-const uuid = require('uuid')
 const shortid = require('shortid')
 
 const userModel = require('../models/user.model')
@@ -10,9 +9,9 @@ const Users = async (req = request, res = response) => {
 		const users = await userModel.findAll({
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id_usu', include: 'id' },
+				attributes: { exclude: 'cod_usu', include: 'id' },
 			},
-			attributes: { exclude: ['pass', 'id'] },
+			attributes: { exclude: ['pass', 'codigo'] },
 		})
 
 		if (users == '') {
@@ -36,11 +35,11 @@ const User = async (req = request, res = response) => {
 	try {
 		const user = await userModel.findOne({
 			where: {
-				id: id,
+				codigo: id,
 			},
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id_usu' },
+				attributes: { exclude: 'cod_usu' },
 			},
 			attributes: { exclude: 'pass' },
 		})
@@ -181,7 +180,7 @@ const UserDelete = async (req = request, res = response) => {
 	try {
 		const result = await userModel.destroy({
 			where: {
-				id: id,
+				codigo: id,
 			},
 		})
 

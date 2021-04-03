@@ -21,15 +21,15 @@ const Productos = db.define(
 		stock: {
 			type: Sequelize.INTEGER,
 		},
-		precio_compra: {
-			type: Sequelize.INTEGER,
-		},
-		precio_venta: {
+		stock_minimo: {
 			type: Sequelize.INTEGER,
 		},
 		// imagen: {
 		// 	type: Sequelize.STRING,
 		// },
+		precio_venta: {
+			type: Sequelize.FLOAT,
+		},
 		creado_por: {
 			type: Sequelize.INTEGER.UNSIGNED,
 		},

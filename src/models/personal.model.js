@@ -25,7 +25,7 @@ const Personal = sequelize.define(
 		cel: {
 			type: Sequelize.BIGINT,
 		},
-		id_usu: {
+		cod_usu: {
 			type: Sequelize.STRING,
 		},
 	},

@@ -45,16 +45,15 @@ const Producto = async (req = request, res = response) => {
 		})
 	}
 }
+
 const ProductoCreate = async (req = request, res = response) => {
-	console.log(req.body)
 	const {
 		codigo,
 		// imagen,
 		nombre,
 		descripcion,
 		categoria,
-		stock,
-		precio_compra,
+		stock_minimo,
 		precio_venta,
 		creado_por,
 	} = req.body
@@ -65,8 +64,7 @@ const ProductoCreate = async (req = request, res = response) => {
 		!nombre ||
 		!descripcion ||
 		!categoria ||
-		!stock ||
-		!precio_compra ||
+		!stock_minimo ||
 		!precio_venta ||
 		!creado_por
 	)
@@ -92,8 +90,7 @@ const ProductoCreate = async (req = request, res = response) => {
 			nombre,
 			descripcion,
 			categoria,
-			stock,
-			precio_compra,
+			stock_minimo,
 			precio_venta,
 			creado_por,
 		})
@@ -108,6 +105,7 @@ const ProductoCreate = async (req = request, res = response) => {
 		})
 	}
 }
+
 const ProductoUpdate = async (req = request, res = response) => {
 	const { codigo } = req.params
 	const {
@@ -115,8 +113,7 @@ const ProductoUpdate = async (req = request, res = response) => {
 		// imagen,
 		descipcion,
 		categoria,
-		stock,
-		precio_compra,
+		stock_minimo,
 		precio_venta,
 		creado_por,
 	} = req.body
@@ -130,8 +127,7 @@ const ProductoUpdate = async (req = request, res = response) => {
 				// imagen,
 				descipcion,
 				categoria,
-				stock,
-				precio_compra,
+				stock_minimo,
 				precio_venta,
 				creado_por,
 			})

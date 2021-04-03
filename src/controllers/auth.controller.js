@@ -21,7 +21,7 @@ const signIn = async (req = request, res = response) => {
 			},
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id_usu' },
+				attributes: { exclude: 'cod_usu' },
 			},
 		})
 
@@ -50,7 +50,7 @@ const signIn = async (req = request, res = response) => {
 
 const createToken = (user) => {
 	// generar un token
-	return jwt.sign({ id: user.id }, jwtSecret, {
+	return jwt.sign({ codigo: user.codigo }, jwtSecret, {
 		expiresIn: '1d', //un dia
 	})
 }

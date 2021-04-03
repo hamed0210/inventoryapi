@@ -13,11 +13,11 @@ const opts = {
 // payload = contenido que esta dentro del token en la funcion createToken
 module.exports = new Strategy(opts, async (payload, done) => {
 	try {
-		const user = await User.findByPk(payload.id, {
+		const user = await User.findByPk(payload.codigo, {
 			attributes: { exclude: 'pass' },
 			include: {
 				model: personalModel,
-				attributes: { exclude: 'id_usu', include: 'id' },
+				attributes: { exclude: 'cod_usu', include: 'id' },
 			},
 		})
 

@@ -1,5 +1,5 @@
 const { request, response } = require('express')
-const uuid = require('uuid')
+const shortid = require('shortid')
 
 const ventasModel = require('../models/ventas.model')
 
@@ -41,9 +41,9 @@ const Venta = async (req = request, res = response) => {
 	}
 }
 const VentaCreate = async (req = request, res = response) => {
-	const { cogido, id_cliente, id_vendedor, productos, neto, total } = req.body
+	const { cogido, id_cliente, id_vendedor, productos, cantidad } = req.body
 
-	if (!cogido || !id_cliente || !id_vendedor || !productos || !neto || !total)
+	if (!cogido || !id_cliente || !id_vendedor || !productos || !cantidad)
 		return res.status(400).json({
 			message: 'Por favor ingresar datos requeridos',
 		})
@@ -65,8 +65,7 @@ const VentaCreate = async (req = request, res = response) => {
 			id_cliente,
 			id_vendedor,
 			productos,
-			neto,
-			t,
+			cantidad,
 		})
 
 		return res.status(201).json({
@@ -81,7 +80,7 @@ const VentaCreate = async (req = request, res = response) => {
 }
 const VentaUpdate = async (req = request, res = response) => {
 	const { codigo } = req.params
-	const { id_cliente, id_vendedor, productos, neto, total } = req.body
+	const { id_cliente, id_vendedor, productos, cantidad } = req.body
 
 	try {
 		const result = await ventasModel.findByPk(codigo)
@@ -91,8 +90,7 @@ const VentaUpdate = async (req = request, res = response) => {
 				id_cliente,
 				id_vendedor,
 				productos,
-				neto,
-				total,
+				cantidad,
 			})
 		} else {
 			return res.status(400).json({

@@ -1,0 +1,24 @@
+POST http://localhost:5000/api/signin 
+Content-Type: application/json
+
+{
+	"email": "hduran0210@gmail.com",
+	"pass": "123"
+}
+###
+
+GET http://localhost:5000/api/compras 
+Content-Type: application/json
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ28iOiJpUUdyT095d3ZBIiwiaWF0IjoxNjE3MjI0OTkzLCJleHAiOjE2MTczMTEzOTN9.Cw4QnIU2CfhaYh67wCG-OAi4v9nUm-WGyY5lCbp4w1A
+###
+
+POST http://localhost:5000/api/compras
+Content-Type: application/json
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RpZ28iOiJpUUdyT095d3ZBIiwiaWF0IjoxNjE3MjI0OTkzLCJleHAiOjE2MTczMTEzOTN9.Cw4QnIU2CfhaYh67wCG-OAi4v9nUm-WGyY5lCbp4w1A
+
+{
+	"id_comprador": 1046814387,
+  "id_proveedor": 325235235,
+  "precio_total": 400
+}
+###

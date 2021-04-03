@@ -12,7 +12,10 @@ const userRoute = require('./routes/user.route')
 const categoriasRoute = require('./routes/categorias.route')
 const productosRoute = require('./routes/productos.route')
 const clientesRoute = require('./routes/clientes.route')
+const proveedoresRoute = require('./routes/proveedores.route')
 const ventasRoute = require('./routes/ventas.route')
+const comprasRoute = require('./routes/compras.route')
+const inventarioRoute = require('./routes/inventario.route')
 
 require('./asociaciones')
 
@@ -30,6 +33,7 @@ app.set('port', process.env.PORT)
 	Middlewares
 */
 app.use(cors())
+app.disable('x-powered-by')
 app.use(morgan('dev'))
 // para que podamos entender el formato json
 app.use(express.json())
@@ -57,6 +61,9 @@ app.use('/api', logoutRoute)
 app.use('/api', productosRoute)
 app.use('/api', categoriasRoute)
 app.use('/api', ventasRoute)
+app.use('/api', comprasRoute)
 app.use('/api', clientesRoute)
+app.use('/api', proveedoresRoute)
+app.use('/api', inventarioRoute)
 
 module.exports = app
