@@ -19,7 +19,7 @@ const Compras = db.define(
 			type: Sequelize.TEXT,
 		},
 		precio_total: {
-			type: Sequelize.FLOAT,
+			type: Sequelize.INTEGER,
 		},
 		fecha_compra: {
 			type: Sequelize.DATE,

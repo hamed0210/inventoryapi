@@ -4,6 +4,7 @@ const passport = require('passport')
 const {
 	Ventas,
 	Venta,
+	VentaCreate,
 	VentaUpdate,
 	VentaDelete,
 } = require('../controllers/ventas.controller')
@@ -17,6 +18,11 @@ router.get(
 	'/ventas/:codigo',
 	passport.authenticate('jwt', { session: false }),
 	Venta
+)
+router.post(
+	'/ventas',
+	passport.authenticate('jwt', { session: false }),
+	VentaCreate
 )
 router.put(
 	'/ventas/:codigo',

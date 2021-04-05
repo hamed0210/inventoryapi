@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize')
 const db = require('../database/database')
 
 const Ventas = db.define(
-	'ventas',
+	'sale',
 	{
 		codigo: {
 			type: Sequelize.STRING,
@@ -15,17 +15,11 @@ const Ventas = db.define(
 		id_vendedor: {
 			type: Sequelize.INTEGER.UNSIGNED,
 		},
-		producto: {
-			type: Sequelize.STRING,
-		},
-		cantidad: {
-			type: Sequelize.INTEGER,
-		},
-		precio_unidad: {
-			type: Sequelize.FLOAT,
+		productos: {
+			type: Sequelize.TEXT,
 		},
 		precio_total: {
-			type: Sequelize.FLOAT,
+			type: Sequelize.INTEGER,
 		},
 		fecha_venta: {
 			type: Sequelize.DATE,

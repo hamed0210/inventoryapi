@@ -2,6 +2,7 @@ const { request, response } = require('express')
 const shortid = require('shortid')
 
 const ventasModel = require('../models/ventas.model')
+const productosModel = require('../models/productos.model')
 
 const Ventas = async (req = request, res = response) => {
 	try {
@@ -41,35 +42,81 @@ const Venta = async (req = request, res = response) => {
 	}
 }
 const VentaCreate = async (req = request, res = response) => {
-	const { cogido, id_cliente, id_vendedor, productos, cantidad } = req.body
+	const { id_cliente, id_vendedor, productos, precio_total } = req.body
 
-	if (!cogido || !id_cliente || !id_vendedor || !productos || !cantidad)
+	if (!id_cliente || !id_vendedor || !productos || !precio_total)
 		return res.status(400).json({
 			message: 'Por favor ingresar datos requeridos',
 		})
 
 	try {
-		const result = await ventasModel.findOne({
-			where: {
-				codigo: codigo,
-			},
-		})
+		// let newVenta = {}
+		// let productosArray = []
+		// let messageWarning = ''
 
-		if (result)
-			return res.status(400).json({
-				message: 'La venta ya se encuentra registrada',
-			})
+		// const verificarStock = (result, data) => {
+		// 	if (result) {
+		// 		if (
+		// 			parseInt(result.stock) - parseInt(data.cantidad) >
+		// 			parseInt(result.stock_minimo)
+		// 		) {
+		// 			productosArray.push(result)
+		// 		}
+		// 		if (
+		// 			parseInt(result.stock) - parseInt(data.cantidad) <=
+		// 				parseInt(result.stock_minimo) &&
+		// 			parseInt(result.stock) - parseInt(data.cantidad) > 0
+		// 		) {
+		// 			productosArray.push(result)
+		// 			messageWarning = `El producto ${result.nombre} ${result.descripcion} se esta agotando`
+		// 		}
+		// 		if (parseInt(result.stock) - parseInt(data.cantidad) == 0) {
+		// 			productosArray.push(result)
+		// 			messageWarning = `El producto ${result.nombre} ${result.descripcion} en su stock llego a 0`
+		// 		}
+		// 		if (parseInt(result.stock) - parseInt(data.cantidad) < 0) {
+		// 			messageWarning = `La cantidad del producto ${result.nombre} ${result.descripcion} a vender es mayor al stock almacenado`
+		// 		}
+		// 	}
+		// }
+
+		// Promise.all([
+		// 	JSON.parse(productos).forEach(async (el) => {
+		// 		productoResust = await productosModel.findByPk(el.producto, {
+		// 			attributes: ['nombre', 'descripcion', 'stock', 'stock_minimo'],
+		// 		})
+		// 		verificarStock(productoResust, el)
+		// 	}),
+		// (newVenta = await ventasModel.create({
+		// 	codigo: shortid.generate(),
+		// 	id_cliente,
+		// 	id_vendedor,
+		// 	productos,
+		// 	precio_total,
+		// })),
+		// productosArray.map((el) => {
+		// 	JSON.parse(productos).map(async (element) => {
+		// 		await productosModel.update(
+		// 			{
+		// 				stock: parseInt(el.stock) - parseInt(element.cantidad),
+		// 			},
+		// 			{ where: { codigo: element.producto } }
+		// 		)
+		// 	})
+		// }),
+		// ])
 
 		const newVenta = await ventasModel.create({
-			cogido,
+			codigo: shortid.generate(),
 			id_cliente,
 			id_vendedor,
 			productos,
-			cantidad,
+			precio_total,
 		})
 
 		return res.status(201).json({
 			message: 'Nueva venta creada correctamente',
+			// messageWarning: messageWarning,
 			data: newVenta,
 		})
 	} catch (error) {

@@ -2,6 +2,7 @@ const { request, response } = require('express')
 const shortid = require('shortid')
 
 const comprasModel = require('../models/compras.model')
+const productosModel = require('../models/productos.model')
 
 const Compras = async (req = request, res = response) => {
 	try {
@@ -49,13 +50,30 @@ const CompraCreate = async (req = request, res = response) => {
 		})
 
 	try {
-		const newCompra = await comprasModel.create({
-			codigo: shortid.generate(),
-			id_proveedor,
-			id_comprador,
-			productos,
-			precio_total,
-		})
+		let newCompra = {}
+		let stockProducto = {}
+
+		Promise.all([
+			(newCompra = await comprasModel.create({
+				codigo: shortid.generate(),
+				id_proveedor,
+				id_comprador,
+				productos,
+				precio_total,
+			})),
+			JSON.parse(productos).map(async (el) => {
+				stockProducto = await productosModel.findByPk(el.producto, {
+					attributes: ['stock'],
+				})
+				stockProducto &&
+					(await productosModel.update(
+						{
+							stock: parseInt(stockProducto.stock) + parseInt(el.cantidad),
+						},
+						{ where: { codigo: el.producto } }
+					))
+			}),
+		])
 
 		return res.status(201).json({
 			message: 'Nueva compra creada correctamente',
