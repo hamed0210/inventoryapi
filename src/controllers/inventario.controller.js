@@ -1,11 +1,38 @@
 const { request, response } = require('express')
 
 const ventasModel = require('../models/ventas.model')
-const comprasModel = require('../models/compras.model')
+const productosModel = require('../models/productos.model')
 
 const Inventario = async (req = request, res = response) => {
 	try {
-		const result = await ventasModel.findAll()
+		let result = []
+		let productosList = []
+
+		Promise.all([
+			(result = await ventasModel.findAll()),
+			(productosList = await productosModel.findAll({
+				attributes: ['codigo', 'nombre', 'descripcion'],
+			})),
+		])
+
+		result.map((el) => {
+			let productoList = []
+			JSON.parse(el.productos).map((codigo) => {
+				productosList.map((element) => {
+					if (codigo.producto === element.codigo)
+						return productoList.push(`${element.nombre} ${element.descripcion}`)
+				})
+			})
+			return (el.productos = productoList)
+		})
+
+		result.map((el) => {
+			for (let i = 0; i < el.productos.length; i++) {
+				if (i + 1 !== el.productos.length)
+					el.productos[i] = `${el.productos[i]}, `
+			}
+		})
+
 		if (result == '')
 			return res.status(400).json({
 				message: 'No se encuentró ninguna venta registrada',

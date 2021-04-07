@@ -42,6 +42,7 @@ const Compra = async (req = request, res = response) => {
 	}
 }
 const CompraCreate = async (req = request, res = response) => {
+	console.log(req.body)
 	const { id_proveedor, id_comprador, productos, precio_total } = req.body
 
 	if (!id_proveedor || !id_comprador || !productos || !precio_total)
@@ -51,7 +52,7 @@ const CompraCreate = async (req = request, res = response) => {
 
 	try {
 		let newCompra = {}
-		let stockProducto = {}
+		// let stockProducto = {}
 
 		Promise.all([
 			(newCompra = await comprasModel.create({
@@ -62,7 +63,7 @@ const CompraCreate = async (req = request, res = response) => {
 				precio_total,
 			})),
 			JSON.parse(productos).map(async (el) => {
-				stockProducto = await productosModel.findByPk(el.producto, {
+				const stockProducto = await productosModel.findByPk(el.producto, {
 					attributes: ['stock'],
 				})
 				stockProducto &&

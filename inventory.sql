@@ -89,6 +89,19 @@ CREATE TABLE compras(
 	fecha_compra DATETIME DEFAULT current_timestamp
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE inventerio(
+	codigo VARCHAR(50),
+	tipo ENUM('Compra', 'Venta') NOT NULL,
+	id_proveedor INT(10) UNSIGNED,
+	id_cliente INT(10) UNSIGNED,
+	id_usuario INT(10) UNSIGNED NOT NULL,
+	productos TEXT NOT NULL,
+	precio_compra INT(10),
+	precio_venta INT(10),
+	precio_total INT(10) NOT NULL,
+	fecha_compra DATETIME DEFAULT current_timestamp
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- INDICES 
 
