@@ -15,6 +15,9 @@ const Productos = db.define(
 		descripcion: {
 			type: Sequelize.TEXT,
 		},
+		medidas: {
+			type: Sequelize.STRING,
+		},
 		categoria: {
 			type: Sequelize.STRING,
 		},
@@ -29,6 +32,9 @@ const Productos = db.define(
 		// },
 		precio_venta: {
 			type: Sequelize.FLOAT,
+		},
+		cantidad_ventas: {
+			type: Sequelize.INTEGER,
 		},
 		creado_por: {
 			type: Sequelize.INTEGER.UNSIGNED,

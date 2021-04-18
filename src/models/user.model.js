@@ -9,10 +9,28 @@ const User = sequelize.define(
 	{
 		codigo: {
 			type: Sequelize.STRING,
+		},
+		id: {
+			type: Sequelize.INTEGER.UNSIGNED,
 			primaryKey: true,
 		},
 		email: {
 			type: Sequelize.STRING,
+		},
+		nombres: {
+			type: Sequelize.STRING,
+		},
+		apellidos: {
+			type: Sequelize.STRING,
+		},
+		dir: {
+			type: Sequelize.STRING,
+		},
+		ciudad: {
+			type: Sequelize.STRING,
+		},
+		cel: {
+			type: Sequelize.BIGINT,
 		},
 		pass: {
 			type: Sequelize.CHAR(60),

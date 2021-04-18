@@ -8,7 +8,7 @@ const Categorias = async (req = request, res = response) => {
 	try {
 		const result = await categoriasModel.findAll()
 
-		if (result == '')
+		if (result === '')
 			return res.status(400).json({
 				message: 'No se encuentra ninguna categoría registrada',
 			})
@@ -117,7 +117,7 @@ const CategoriaDelete = async (req = request, res = response) => {
 
 		console.log(result)
 
-		if (result == 0)
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar categoría con código ${codigo}`,
 			})

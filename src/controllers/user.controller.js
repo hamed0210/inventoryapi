@@ -2,19 +2,14 @@ const { request, response } = require('express')
 const shortid = require('shortid')
 
 const userModel = require('../models/user.model')
-const personalModel = require('../models/personal.model')
 
 const Users = async (req = request, res = response) => {
 	try {
 		const users = await userModel.findAll({
-			include: {
-				model: personalModel,
-				attributes: { exclude: 'cod_usu', include: 'id' },
-			},
 			attributes: { exclude: ['pass', 'codigo'] },
 		})
 
-		if (users == '') {
+		if (users === '') {
 			return res.status(400).json({
 				message: 'No se encuentró ningún usuario registrado',
 			})
@@ -37,11 +32,7 @@ const User = async (req = request, res = response) => {
 			where: {
 				codigo: id,
 			},
-			include: {
-				model: personalModel,
-				attributes: { exclude: 'cod_usu' },
-			},
-			attributes: { exclude: 'pass' },
+			attributes: { exclude: ['pass', 'codigo'] },
 		})
 
 		if (!user)
@@ -89,43 +80,41 @@ const UserCreate = async (req = request, res = response) => {
 	}
 
 	try {
-		const result = await userModel.findOne({
-			where: {
-				email: email,
-			},
+		const resultUserId = await userModel.findByPk(id)
+
+		const resultUserEmail = await userModel.findOne({
+			where: { email },
 		})
 
-		if (result)
+		if (resultUserId)
 			return res
 				.status(400)
-				.json({ message: 'El usuario ya se encuentra registrado' })
+				.json({ message: 'El id ya se encuentra registrado' })
 
-		const UUID = shortid.generate()
+		if (resultUserEmail)
+			return res
+				.status(400)
+				.json({ message: 'El email ya se encuentra registrado' })
 
-		const newUser = await userModel.create(
-			{
-				id: shortid.generate(),
-				email,
-				pass,
-				role,
-				persona: [
-					{
-						id,
-						nombres,
-						apellidos,
-						dir,
-						ciudad,
-						cel,
-						id_usu: UUID,
-					},
-				],
-			},
-			{ include: 'persona' }
-		)
+		// const UUID = shortid.generate()
+
+		const newUSer = await userModel.create({
+			codigo: shortid.generate(),
+			id,
+			email,
+			nombres,
+			apellidos,
+			cel,
+			dir,
+			ciudad,
+			pass,
+			role,
+		})
+
+		console.log(newUSer)
 
 		return res.status(201).json({
 			message: 'Nuevo usuario creado correctamente',
-			data: newUser,
 		})
 	} catch (error) {
 		return res.status(400).json({
@@ -136,36 +125,34 @@ const UserCreate = async (req = request, res = response) => {
 
 const UserUpdate = async (req = request, res = response) => {
 	const { id } = req.params
-	const { pass, role, nombres, apellidos, dir, ciudad, cel, email } = req.body
+	const { role, nombres, apellidos, dir, ciudad, cel, email } = req.body
 
 	try {
-		const result = await personalModel.findOne({
-			where: {
-				id: id,
-			},
-		})
+		const result = await userModel.findByPk(id)
 
-		if (result) {
-			await result.update(
-				{
-					id: id,
-					nombres,
-					apellidos,
-					dir,
-					ciudad,
-					cel,
-					usuario: [{ email, pass, role }],
-				},
-				{ include: 'usuario' }
-			)
-		} else {
+		if (!result)
 			return res.status(400).json({
 				message: `El usuario con id ${id} no se encuentra registrado`,
 			})
-		}
+
+		const resultUpdate = await result.update(
+			{
+				email,
+				nombres,
+				apellidos,
+				cel,
+				dir,
+				ciudad,
+				role,
+			}
+			// { attributes: { exclude: ['pass', 'codigo'] } }
+		)
+
+		console.log(resultUpdate)
+
 		return res.status(200).json({
 			message: 'Usuario actualizado correctamente',
-			data: result,
+			data: resultUpdate,
 		})
 	} catch (error) {
 		return res.status(400).json({
@@ -178,13 +165,11 @@ const UserDelete = async (req = request, res = response) => {
 	const { id } = req.params
 
 	try {
-		const result = await userModel.destroy({
-			where: {
-				codigo: id,
-			},
-		})
+		const userResult = await userModel.findByPk(id)
 
-		if (result == 0)
+		const result = await userResult.destroy()
+
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar usuario con id ${id}`,
 			})

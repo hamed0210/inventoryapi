@@ -9,8 +9,6 @@ const {
 	CompraCreate,
 } = require('../controllers/compras.controller')
 
-const { isAdmin } = require('../libs/auth.libs')
-
 const router = Router()
 
 router.get(
@@ -31,13 +29,11 @@ router.post(
 router.put(
 	'/compras/:codigo',
 	passport.authenticate('jwt', { session: false }),
-	isAdmin,
 	CompraUpdate
 )
 router.delete(
 	'/compras/:codigo',
 	passport.authenticate('jwt', { session: false }),
-	isAdmin,
 	CompraDelete
 )
 

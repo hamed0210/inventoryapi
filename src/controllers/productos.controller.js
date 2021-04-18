@@ -1,4 +1,5 @@
 const { request, response } = require('express')
+const shortid = require('shortid')
 
 const productosModel = require('../models/productos.model')
 const categoriasModel = require('../models/categorias.model')
@@ -11,7 +12,7 @@ const Productos = async (req = request, res = response) => {
 				attributes: { exclude: 'codigo' },
 			},
 		})
-		if (result == '')
+		if (result === '')
 			return res.status(400).json({
 				message: 'No se encontró ningún producto registrado',
 			})
@@ -48,10 +49,10 @@ const Producto = async (req = request, res = response) => {
 
 const ProductoCreate = async (req = request, res = response) => {
 	const {
-		codigo,
 		// imagen,
 		nombre,
 		descripcion,
+		medidas,
 		categoria,
 		stock_minimo,
 		precio_venta,
@@ -59,10 +60,9 @@ const ProductoCreate = async (req = request, res = response) => {
 	} = req.body
 
 	if (
-		!codigo ||
 		// !imagen ||
 		!nombre ||
-		!descripcion ||
+		!medidas ||
 		!categoria ||
 		!stock_minimo ||
 		!precio_venta ||
@@ -75,7 +75,7 @@ const ProductoCreate = async (req = request, res = response) => {
 	try {
 		const result = await productosModel.findOne({
 			where: {
-				codigo,
+				nombre,
 			},
 		})
 
@@ -85,10 +85,11 @@ const ProductoCreate = async (req = request, res = response) => {
 			})
 
 		const newProducto = await productosModel.create({
-			codigo,
+			codigo: shortid.generate(),
 			// imagen,
 			nombre,
 			descripcion,
+			medidas,
 			categoria,
 			stock_minimo,
 			precio_venta,
@@ -112,6 +113,7 @@ const ProductoUpdate = async (req = request, res = response) => {
 		nombre,
 		// imagen,
 		descipcion,
+		medidas,
 		categoria,
 		stock_minimo,
 		precio_venta,
@@ -119,14 +121,23 @@ const ProductoUpdate = async (req = request, res = response) => {
 	} = req.body
 
 	try {
-		const result = await productosModel.findByPk(codigo)
+		let result = {}
+		let resultCotegorias = {}
 
-		if (result) {
+		Promise.all([
+			(resultCotegorias = await categoriasModel.findOne({
+				where: { nombre: categoria },
+			})),
+			(result = await productosModel.findByPk(codigo)),
+		])
+
+		if (result && resultCotegorias) {
 			await result.update({
 				nombre,
 				// imagen,
 				descipcion,
-				categoria,
+				medidas,
+				categoria: resultCotegorias.codigo,
 				stock_minimo,
 				precio_venta,
 				creado_por,
@@ -136,6 +147,8 @@ const ProductoUpdate = async (req = request, res = response) => {
 				message: `EL producto con código ${codigo} no se encuentra registrado`,
 			})
 		}
+
+		result.categoria = resultCotegorias.nombre
 
 		return res.status(200).json({
 			message: 'Producto actualizado correctamente',
@@ -157,7 +170,7 @@ const ProductoDelete = async (req = request, res = response) => {
 			},
 		})
 
-		if (result == 0)
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar Producto con código ${codigo}`,
 			})

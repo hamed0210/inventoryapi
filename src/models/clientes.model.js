@@ -24,6 +24,12 @@ const Clientes = database.define(
 		ciudad: {
 			type: Sequelize.STRING,
 		},
+		cantidad_compras: {
+			type: Sequelize.INTEGER,
+		},
+		total_compras: {
+			type: Sequelize.INTEGER,
+		},
 	},
 	{
 		timestamps: false,

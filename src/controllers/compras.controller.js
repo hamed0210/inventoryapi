@@ -3,11 +3,12 @@ const shortid = require('shortid')
 
 const comprasModel = require('../models/compras.model')
 const productosModel = require('../models/productos.model')
+const inventarioModel = require('../models/inventario.model')
 
 const Compras = async (req = request, res = response) => {
 	try {
 		const result = await comprasModel.findAll()
-		if (result == '')
+		if (result === '')
 			return res.status(400).json({
 				message: 'No se encuentró ninguna compra registrada',
 			})
@@ -23,7 +24,6 @@ const Compras = async (req = request, res = response) => {
 }
 const Compra = async (req = request, res = response) => {
 	const { codigo } = req.params
-
 	try {
 		const result = await comprasModel.findByPk(codigo)
 
@@ -42,7 +42,6 @@ const Compra = async (req = request, res = response) => {
 	}
 }
 const CompraCreate = async (req = request, res = response) => {
-	console.log(req.body)
 	const { id_proveedor, id_comprador, productos, precio_total } = req.body
 
 	if (!id_proveedor || !id_comprador || !productos || !precio_total)
@@ -52,16 +51,32 @@ const CompraCreate = async (req = request, res = response) => {
 
 	try {
 		let newCompra = {}
-		// let stockProducto = {}
+		const codigo = shortid.generate()
 
 		Promise.all([
-			(newCompra = await comprasModel.create({
-				codigo: shortid.generate(),
-				id_proveedor,
-				id_comprador,
-				productos,
-				precio_total,
-			})),
+			(newCompra = await comprasModel.create(
+				{
+					codigo,
+					id_proveedor,
+					id_comprador,
+					productos,
+					precio_total,
+					inventario: [
+						{
+							codigo,
+							tipo: 'Compra',
+							id_usuario: id_comprador,
+							productos,
+							precio: precio_total,
+						},
+					],
+				},
+				{
+					include: {
+						model: inventarioModel,
+					},
+				}
+			)),
 			JSON.parse(productos).map(async (el) => {
 				const stockProducto = await productosModel.findByPk(el.producto, {
 					attributes: ['stock'],
@@ -135,7 +150,7 @@ const CompraDelete = async (req = request, res = response) => {
 			},
 		})
 
-		if (result == 0)
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar compra con código ${codigo}`,
 			})

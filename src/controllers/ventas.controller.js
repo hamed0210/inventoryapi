@@ -3,11 +3,13 @@ const shortid = require('shortid')
 
 const ventasModel = require('../models/ventas.model')
 const productosModel = require('../models/productos.model')
+const clientesModel = require('../models/clientes.model')
+const inventarioModel = require('../models/inventario.model')
 
 const Ventas = async (req = request, res = response) => {
 	try {
 		const result = await ventasModel.findAll()
-		if (result == '')
+		if (result === '')
 			return res.status(400).json({
 				message: 'No se encuentró ninguna venta registrada',
 			})
@@ -56,12 +58,43 @@ const VentaCreate = async (req = request, res = response) => {
 
 	try {
 		let newVenta = {}
+		let clienteResult = ''
 		let messageWarning = ''
+		const codigo = shortid.generate()
 
 		Promise.all([
+			(newVenta = await ventasModel.create(
+				{
+					codigo,
+					id_cliente,
+					id_vendedor,
+					productos,
+					precio_total,
+					inventario: [
+						{
+							codigo,
+							tipo: 'Venta',
+							id_usuario: id_vendedor,
+							productos,
+							precio: precio_total,
+						},
+					],
+				},
+				{
+					include: {
+						model: inventarioModel,
+					},
+				}
+			)),
 			JSON.parse(productos).map(async (el) => {
 				const result = await productosModel.findByPk(el.producto, {
-					attributes: ['nombre', 'descripcion', 'stock', 'stock_minimo'],
+					attributes: [
+						'nombre',
+						'descripcion',
+						'stock',
+						'stock_minimo',
+						'cantidad_ventas',
+					],
 				})
 				if (result) {
 					if (
@@ -77,18 +110,18 @@ const VentaCreate = async (req = request, res = response) => {
 					await productosModel.update(
 						{
 							stock: parseInt(result.stock) - parseInt(el.cantidad),
+							cantidad_ventas: parseInt(result.cantidad_ventas) + 1,
 						},
 						{ where: { codigo: el.producto } }
 					)
 				}
 			}),
-			(newVenta = await ventasModel.create({
-				codigo: shortid.generate(),
-				id_cliente,
-				id_vendedor,
-				productos,
-				precio_total,
-			})),
+			(clienteResult = await clientesModel.findByPk(id_cliente)),
+			await clienteResult.update({
+				cantidad_compras: parseInt(clienteResult.cantidad_compras) + 1,
+				total_compras:
+					parseInt(clienteResult.total_compras) + parseInt(precio_total),
+			}),
 		])
 
 		return res.status(201).json({
@@ -142,7 +175,7 @@ const VentaDelete = async (req = request, res = response) => {
 			},
 		})
 
-		if (result == 0)
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar venta con código ${codigo}`,
 			})

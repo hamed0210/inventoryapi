@@ -9,8 +9,6 @@ const {
 	VentaDelete,
 } = require('../controllers/ventas.controller')
 
-const { isAdmin } = require('../libs/auth.libs')
-
 const router = Router()
 
 router.get('/ventas', passport.authenticate('jwt', { session: false }), Ventas)
@@ -27,13 +25,11 @@ router.post(
 router.put(
 	'/ventas/:codigo',
 	passport.authenticate('jwt', { session: false }),
-	isAdmin,
 	VentaUpdate
 )
 router.delete(
 	'/ventas/:codigo',
 	passport.authenticate('jwt', { session: false }),
-	isAdmin,
 	VentaDelete
 )
 

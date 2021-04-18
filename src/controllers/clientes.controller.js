@@ -6,7 +6,7 @@ const Clientes = async (req = request, res = response) => {
 	try {
 		const result = await clientesModel.findAll()
 
-		if (result == '')
+		if (result === '')
 			return res.status(400).json({
 				message: 'No se encontró ningún cliente registrado',
 			})
@@ -116,7 +116,7 @@ const ClienteDelete = async (req = request, res = response) => {
 			},
 		})
 
-		if (result == 0)
+		if (result === 0)
 			return res.status(400).json({
 				message: `Error al intentar eliminar cliente con id ${id}`,
 			})
